@@ -1,14 +1,14 @@
 import argparse
 
-from pylib.rbc import rbc
+from pylib.rbc import load as rbc_load
 from pylib.acb import export as acb_export
 
 
 def dlr2acb(csv_in, csv_out):
   print("Reading {}".format(csv_in))
-  df = rbc.CsvToDf(csv_in)
+  df = rbc_load.fromCsv(csv_in)
   print("Exporting in ACB format to {}".format(csv_out))
-  acb_export.ToCsv(df, csv_out)
+  acb_export.toCsv(df, csv_out)
 
 
 if __name__ == "__main__":

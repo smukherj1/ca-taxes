@@ -1,7 +1,18 @@
 import pandas as pd
+"""
+Expect Data Frame with columns:
+- Date: dd/mm/yyyy
+- Security: Ticker or stock symbol.
+- Transaction Type: Sell, Buy.
+- Amount: Total transaction amount, i.e., Unit Price x Shares.
+- Unit Price: Price of an individual security.
+- Shares: Number of units of security in the transaction.
+- Commission: Commission paid.
+- Currency: Transaction currency, e.g., CAD, USD, etc.
+"""
 
 
-def ToCsv(df: pd.DataFrame, fname: str):
+def toCsv(df: pd.DataFrame, fname: str):
   df["Price in Foreign Currency?"] = df["Currency"].apply(
       lambda c: "Yes" if c != "CAD" else "No")
   df["Commission in Foreign Currency?"] = df["Currency"].apply(

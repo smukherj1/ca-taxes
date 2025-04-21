@@ -2,7 +2,7 @@ import pandas as pd
 from datetime import datetime
 
 
-def fromCsv(fname: str) -> pd.DataFrame:
+def from_csv(fname: str) -> pd.DataFrame:
   df = pd.read_csv(fname)
   # Reverse order of transactions to list them in ascending order
   # by date.

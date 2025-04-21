@@ -12,7 +12,7 @@ Expect Data Frame with columns:
 """
 
 
-def toCsv(df: pd.DataFrame, fname: str):
+def to_csv(df: pd.DataFrame, fname: str):
   df["Price in Foreign Currency?"] = df["Currency"].apply(
       lambda c: "Yes" if c != "CAD" else "No")
   df["Commission in Foreign Currency?"] = df["Currency"].apply(

@@ -1,16 +1,5 @@
-from PyPDF2 import PdfReader
 import pandas as pd
 from datetime import datetime
-
-
-def PdfToJson(fname: str):
-  r = PdfReader(fname)
-  body = ""
-  for p in r.pages:
-    body += p.extract_text() + "\n"
-  raise RuntimeError(
-      "unimplemented: logic to extract transactions from text of length {} extracted from {} is not yet implemented"
-      .format(len(body), fname))
 
 
 def CsvToDf(fname: str) -> pd.DataFrame:

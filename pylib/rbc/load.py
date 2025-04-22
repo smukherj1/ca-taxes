@@ -1,5 +1,6 @@
 import pandas as pd
 from datetime import datetime
+from ..common import common
 
 
 def from_csv(fname: str) -> pd.DataFrame:
@@ -21,13 +22,11 @@ def from_csv(fname: str) -> pd.DataFrame:
             inplace=True)
   # Convert the date from format like Monday day, Year to dd/mm/yyyy.
   df["Date"] = df["Date"].apply(
-      lambda d: datetime.strptime(d, "%B %d, %Y").strftime("%d/%m/%Y"))
+      lambda d: datetime.strptime(d, "%B %d, %Y").strftime("%Y/%m/%d"))
+  # Stable sort transactions in increasing order by Date.
+  df = common.reorder_df_by(df, "Date")
   df["Shares"] = df["Shares"].abs()
   df["Amount"] = df["Amount"].abs()
   df["Commission"] = 0.0
-  keep_columns = [
-      "Date", "Security", "Transaction Type", "Amount", "Unit Price", "Shares",
-      "Commission", "Currency"
-  ]
-  df = df[keep_columns]
+  df = df[common.DF_COLUMNS]
   return df

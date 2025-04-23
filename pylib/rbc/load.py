@@ -20,7 +20,7 @@ def from_csv(fname: str) -> pd.DataFrame:
       "Value": "Amount",
   },
             inplace=True)
-  # Convert the date from format like Monday day, Year to dd/mm/yyyy.
+  # Convert the date from format like Monday day, Year to yyyy/mm/dd.
   df["Date"] = df["Date"].apply(
       lambda d: datetime.strptime(d, "%B %d, %Y").strftime("%Y/%m/%d"))
   # Stable sort transactions in increasing order by Date.

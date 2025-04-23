@@ -4,6 +4,7 @@ from ..common import common
 
 
 def _from_withdrawals_df(df: pd.DataFrame) -> pd.DataFrame:
+  df = df[df["Order Status"] == "Complete"]
   df.rename(columns={
       "Execution Date": "Date",
       "Price": "Unit Price",
@@ -19,6 +20,7 @@ def _from_withdrawals_df(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _from_releases_df(df: pd.DataFrame) -> pd.DataFrame:
+  df = df[df["Status"] == "Complete"]
   df.rename(columns={
       "Vest Date": "Date",
       "Price": "Unit Price",
@@ -27,7 +29,7 @@ def _from_releases_df(df: pd.DataFrame) -> pd.DataFrame:
             inplace=True)
   df["Transaction Type"] = "Buy"
   clean_amount = lambda a: a.removeprefix("$").replace(",", "")
-  df[c] = df[c].apply(clean_amount)
+  df["Unit Price"] = df["Unit Price"].apply(clean_amount)
   df["Amount"] = df["Unit Price"] * df["Shares"]
   return df
 
@@ -36,11 +38,10 @@ def from_csv(fname: str) -> pd.DataFrame:
   df = pd.read_csv(fname)
   # Select GSU transactions only and exclude Dividend payouts.
   df = df[df["Plan"] == "GSU Class C"]
-  # Split into complete releases (buys) and withdrawals (sales)
+  # Split into releases (buys) and withdrawals (sales)
   # only.
-  releases_df = df[(df["Type"] == "Release") & (df["Status"] == "Complete")]
-  withdrawals_df = df[(df["Type"] == "Sale")
-                      & (df["Order Status"] == "Complete")]
+  releases_df = df[df["Type"] == "Release"]
+  withdrawals_df = df[df["Type"] == "Sale"]
   df = pd.concat(
       [_from_releases_df(releases_df),
        _from_withdrawals_df(withdrawals_df)])

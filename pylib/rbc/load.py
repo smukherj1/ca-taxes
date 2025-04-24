@@ -3,14 +3,16 @@ from datetime import datetime
 from ..common import common
 
 
+def dlr_from_csv(fname: str) -> pd.DataFrame:
+  df = from_csv(fname)
+  # Filter out only the DLR buy/sell transactions.
+  df = df[df["Security"] == "DLR"]
+  df = df[df["Transaction Type"].isin(["Buy", "Sell"])]
+  return df
+
+
 def from_csv(fname: str) -> pd.DataFrame:
   df = pd.read_csv(fname)
-  # Reverse order of transactions to list them in ascending order
-  # by date.
-  df = df.iloc[::-1]
-  # Filter out only the DLR buy/sell transactions.
-  df = df[df["Symbol"] == "DLR"]
-  df = df[df["Activity"].isin(["Buy", "Sell"])]
   # Rename some columns to the ACB website import format.
   df.rename(columns={
       "Symbol": "Security",

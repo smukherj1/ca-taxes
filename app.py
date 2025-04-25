@@ -4,6 +4,7 @@ from pylib.rbc import load as rbc_load
 from pylib.acb import export as acb_export
 from pylib.gsu import load as gsu_load
 from pylib.common import common
+from datetime import datetime
 
 
 def dlr2acb(csv_files_in: list[str], csv_out: str):
@@ -31,6 +32,11 @@ def aggdist(csv_files_in: list[str], csv_out: str):
     print("Loading {}".format(cf_in))
     dfs.append(rbc_load.from_csv(cf_in))
   df = common.merge_dfs(dfs)
+  df["Year"] = df["Date"].apply(
+      lambda d: datetime.strptime(d, "%Y/%m/%d").strftime("%Y")).astype(int)
+  df = df[df["Transaction Type"] == "Distribution"]
+  df = df[["Year", "Security", "Amount"]]
+  df = df.groupby(by=["Year", "Security"], as_index=False).sum()
   df.to_csv(csv_out, index=False)
 
 

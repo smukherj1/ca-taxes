@@ -7,11 +7,11 @@ from pylib.common import common
 from datetime import datetime
 
 
-def dlr2acb(csv_files_in: list[str], csv_out: str):
+def di2acb(csv_files_in: list[str], csv_out: str):
   dfs = []
   for cf_in in csv_files_in:
     print("Loading {}".format(cf_in))
-    dfs.append(rbc_load.dlr_from_csv(cf_in))
+    dfs.append(rbc_load.di_from_csv(cf_in))
     print("Exporting in ACB format to {}".format(csv_out))
   df = common.merge_dfs(dfs)
   acb_export.to_csv(df, csv_out)
@@ -44,17 +44,17 @@ if __name__ == "__main__":
   p = argparse.ArgumentParser(description="Transaction Imported for Taxes")
   subparsers = p.add_subparsers(dest="subcommand")
 
-  p_dlr2acb = subparsers.add_parser(
-      "dlr2acb",
+  p_di2acb = subparsers.add_parser(
+      "di2acb",
       help=
       "Import RBC DI CSV transactions and transform to CSV importable into adjustedcostbase.ca."
   )
-  p_dlr2acb.add_argument(
+  p_di2acb.add_argument(
       "-i",
       required=True,
       action="append",
       help="Input CSV file. Can be specified multiple times.")
-  p_dlr2acb.add_argument("-o", required=True, help="Output CSV file.")
+  p_di2acb.add_argument("-o", required=True, help="Output CSV file.")
 
   p_gsu2acb = subparsers.add_parser(
       "gsu2acb",
@@ -81,8 +81,8 @@ if __name__ == "__main__":
   p_aggdist.add_argument("-o", required=True, help="Output CSV file.")
 
   args = p.parse_args()
-  if args.subcommand == "dlr2acb":
-    dlr2acb(args.i, args.o)
+  if args.subcommand == "di2acb":
+    di2acb(args.i, args.o)
   elif args.subcommand == "gsu2acb":
     gsu2acb(args.i, args.o)
   elif args.subcommand == "aggdist":
